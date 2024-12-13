@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transmutación Emocional</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app-container" class="container">
+      <div class="header">
+        <h1>Transmutación Emocional</h1>
+        <div class="settings-container">
+          <button id="settings-button" class="settings-button">
+            Configurar
+          </button>
+          <div id="settings-menu" class="settings-menu hidden">
+            <button id="access-key-option">Clave de Acceso</button>
+            <button id="language-option">Idioma</button>
+            <button id="history-option">Historial</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mood-bar-container">
+        <div class="mood-bar">
+          <div class="mood-level" id="mood-level"></div>
+        </div>
+        <div class="mood-labels">
+          <span>Negativo</span>
+          <span>Positivo</span>
+        </div>
+      </div>
+
+      <div class="input-section">
+        <textarea
+          id="emotion-description"
+          placeholder="Describe cómo te sientes en este momento..."
+          rows="4"
+        ></textarea>
+        <button id="submit-emotion">Transmutar Emoción</button>
+      </div>
+
+      <div class="results-section hidden" id="results">
+        <div class="emotion-results">
+          <div class="emotion-card">
+            <h3>Emoción Identificada</h3>
+            <p id="current-emotion"></p>
+          </div>
+          <div class="emotion-arrow">→</div>
+          <div class="emotion-card">
+            <h3>Emoción Transmutada</h3>
+            <p id="transmuted-emotion"></p>
+          </div>
+        </div>
+        <div class="intensity-section">
+          <h3>Intensidad Emocional</h3>
+          <p id="emotion-intensity"></p>
+        </div>
+        <div class="suggestions-section">
+          <h3>Sugerencias para la Transmutación</h3>
+          <ul id="suggestions-list"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para la clave de acceso -->
+    <div id="key-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Configurar Clave de Acceso</h2>
+        <input
+          type="text"
+          id="access-key"
+          placeholder="Ingresa tu clave de acceso"
+        />
+        <div class="modal-buttons">
+          <button id="save-key">Guardar</button>
+          <button id="close-key-modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para el idioma -->
+    <div id="language-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Seleccionar Idioma</h2>
+        <div class="language-options">
+          <button id="lang-es" class="language-button selected">Español</button>
+          <button id="lang-en" class="language-button">English</button>
+        </div>
+        <div class="modal-buttons">
+          <button id="save-language">Guardar</button>
+          <button id="close-language-modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para el historial -->
+    <div id="history-modal" class="modal hidden">
+      <div class="modal-content history-content">
+        <h2>Historial de Emociones</h2>
+        <div id="history-list" class="history-list"></div>
+        <div class="modal-buttons">
+          <button id="clear-history">Limpiar Historial</button>
+          <button id="close-history-modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
