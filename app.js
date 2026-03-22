@@ -236,7 +236,9 @@ const translations = {
     errorEmptyKey: "Por favor, ingresa una clave válida",
     errorServer: "Error en la respuesta del servidor",
     errorInvalidKey: "Clave de acceso inválida. Configúrala en Ajustes.",
-    errorNetwork: "Error de conexión. Verifica tu internet.",
+    errorServerDown: "El servidor no está disponible. Intenta de nuevo en unos segundos.",
+    errorTimeout: "La solicitud tardó demasiado. Intenta de nuevo.",
+    serverWaking: "Despertando el servidor, un momento...",
     historyOption: "Historial",
     historyTitle: "Historial de Emociones",
     clearHistory: "Limpiar Historial",
@@ -284,7 +286,9 @@ const translations = {
     errorEmptyKey: "Please enter a valid key",
     errorServer: "Server response error",
     errorInvalidKey: "Invalid access key. Configure it in Settings.",
-    errorNetwork: "Connection error. Check your internet.",
+    errorServerDown: "Server is not available. Try again in a few seconds.",
+    errorTimeout: "Request took too long. Please try again.",
+    serverWaking: "Waking up the server, one moment...",
     historyOption: "History",
     historyTitle: "Emotion History",
     clearHistory: "Clear History",
@@ -640,6 +644,54 @@ closeError.addEventListener("click", () => {
   errorBanner.classList.add("hidden");
 });
 
+// Fetch con retry automático para cold starts
+async function fetchWithRetry(url, options, maxRetries = 2) {
+  const t = getCurrentTranslation();
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 120000);
+
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (response.status === 502 || response.status === 503) {
+        if (attempt < maxRetries) {
+          updateLoadingMessage(t.serverWaking);
+          await new Promise((r) => setTimeout(r, 5000));
+          continue;
+        }
+      }
+
+      return response;
+    } catch (error) {
+      if (error.name === "AbortError") {
+        throw new Error(t.errorTimeout);
+      }
+      if (
+        attempt < maxRetries &&
+        error.name === "TypeError" &&
+        error.message === "Failed to fetch"
+      ) {
+        updateLoadingMessage(t.serverWaking);
+        await new Promise((r) => setTimeout(r, 5000));
+        continue;
+      }
+      throw error;
+    }
+  }
+}
+
+function updateLoadingMessage(message) {
+  const activeStep = document.querySelector(".loading-step.active .step-text");
+  if (activeStep) {
+    activeStep.textContent = message;
+  }
+}
+
 // Enviar la descripción emocional
 submitButton.addEventListener("click", async () => {
   const description = emotionDescription.value.trim();
@@ -655,7 +707,7 @@ submitButton.addEventListener("click", async () => {
   showLoading();
 
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetchWithRetry(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -681,7 +733,7 @@ submitButton.addEventListener("click", async () => {
   } catch (error) {
     hideLoading();
     if (error.name === "TypeError" && error.message === "Failed to fetch") {
-      showError(t.errorNetwork);
+      showError(t.errorServerDown);
     } else {
       showError(error.message);
     }
