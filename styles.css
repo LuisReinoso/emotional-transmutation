@@ -52,6 +52,25 @@ h3 {
   position: relative;
 }
 
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.library-button {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.library-button:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
 .settings-button {
   background-color: transparent;
   color: var(--primary-color);
