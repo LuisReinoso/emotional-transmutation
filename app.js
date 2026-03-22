@@ -28,6 +28,8 @@ const translations = {
     errorEmptyDescription: "Por favor, describe cómo te sientes",
     errorEmptyKey: "Por favor, ingresa una clave válida",
     errorServer: "Error en la respuesta del servidor",
+    errorInvalidKey: "Clave de acceso inválida. Configúrala en Ajustes.",
+    errorNetwork: "Error de conexión. Verifica tu internet.",
     historyOption: "Historial",
     historyTitle: "Historial de Emociones",
     clearHistory: "Limpiar Historial",
@@ -35,6 +37,10 @@ const translations = {
     noHistory: "No hay registros en el historial",
     from: "de",
     to: "a",
+    loadingIdentifying: "Identificando emoción...",
+    loadingAnalyzing: "Analizando polaridad...",
+    loadingTransmuting: "Generando transmutación...",
+    analyzing: "Analizando...",
   },
   en: {
     title: "Emotional Transmutation",
@@ -59,6 +65,8 @@ const translations = {
     errorEmptyDescription: "Please describe how you feel",
     errorEmptyKey: "Please enter a valid key",
     errorServer: "Server response error",
+    errorInvalidKey: "Invalid access key. Configure it in Settings.",
+    errorNetwork: "Connection error. Check your internet.",
     historyOption: "History",
     historyTitle: "Emotion History",
     clearHistory: "Clear History",
@@ -66,6 +74,10 @@ const translations = {
     noHistory: "No history records",
     from: "from",
     to: "to",
+    loadingIdentifying: "Identifying emotion...",
+    loadingAnalyzing: "Analyzing polarity...",
+    loadingTransmuting: "Generating transmutation...",
+    analyzing: "Analyzing...",
   },
 };
 
@@ -96,6 +108,14 @@ const historyModal = document.getElementById("history-modal");
 const historyList = document.getElementById("history-list");
 const clearHistoryButton = document.getElementById("clear-history");
 const closeHistoryModal = document.getElementById("close-history-modal");
+const errorBanner = document.getElementById("error-banner");
+const errorMessage = document.getElementById("error-message");
+const closeError = document.getElementById("close-error");
+const loadingSection = document.getElementById("loading-section");
+const polarityBadge = document.getElementById("polarity-badge");
+const emotionCategoryTag = document.getElementById("emotion-category-tag");
+const intensityLevelTag = document.getElementById("intensity-level-tag");
+const intensityBar = document.getElementById("intensity-bar");
 
 // Inicializar configuraciones
 if (!localStorage.getItem("accessKey")) {
@@ -195,7 +215,7 @@ function updateUILanguage() {
   document.querySelector(".mood-labels span:last-child").textContent =
     t.positive;
   emotionDescription.placeholder = t.placeholder;
-  submitButton.textContent = t.transmute;
+  submitButton.querySelector(".button-text").textContent = t.transmute;
   document.querySelector(".emotion-card:first-child h3").textContent =
     t.identifiedEmotion;
   document.querySelector(".emotion-card:last-child h3").textContent =
@@ -234,19 +254,115 @@ function clearResults() {
   emotionIntensity.textContent = "";
   suggestionsList.innerHTML = "";
   resultsSection.classList.add("hidden");
+  errorBanner.classList.add("hidden");
+}
+
+// Loading state management
+let loadingInterval = null;
+
+function showLoading() {
+  const t = getCurrentTranslation();
+  loadingSection.classList.remove("hidden");
+
+  // Update loading step texts
+  document.querySelector("#step-1 .step-text").textContent = t.loadingIdentifying;
+  document.querySelector("#step-2 .step-text").textContent = t.loadingAnalyzing;
+  document.querySelector("#step-3 .step-text").textContent = t.loadingTransmuting;
+
+  // Reset all steps
+  document.querySelectorAll(".loading-step").forEach((step) => {
+    step.classList.remove("active", "done");
+    const icon = step.querySelector(".step-icon");
+    icon.innerHTML = '<span class="step-dot"></span>';
+  });
+  document.getElementById("step-1").classList.add("active");
+  document.querySelector("#step-1 .step-icon").innerHTML = '<span class="spinner-small"></span>';
+
+  // Simulate progress steps
+  let currentStep = 1;
+  loadingInterval = setInterval(() => {
+    if (currentStep < 3) {
+      const prevStep = document.getElementById(`step-${currentStep}`);
+      prevStep.classList.remove("active");
+      prevStep.classList.add("done");
+      prevStep.querySelector(".step-icon").innerHTML = '<span class="step-check"></span>';
+
+      currentStep++;
+      const nextStep = document.getElementById(`step-${currentStep}`);
+      nextStep.classList.add("active");
+      nextStep.querySelector(".step-icon").innerHTML = '<span class="spinner-small"></span>';
+    }
+  }, 4000);
+}
+
+function hideLoading() {
+  if (loadingInterval) {
+    clearInterval(loadingInterval);
+    loadingInterval = null;
+  }
+  // Mark all steps as done
+  document.querySelectorAll(".loading-step").forEach((step) => {
+    step.classList.remove("active");
+    step.classList.add("done");
+    step.querySelector(".step-icon").innerHTML = '<span class="step-check"></span>';
+  });
+  setTimeout(() => {
+    loadingSection.classList.add("hidden");
+  }, 500);
+}
+
+function setButtonLoading(loading) {
+  const t = getCurrentTranslation();
+  const buttonText = submitButton.querySelector(".button-text");
+  const buttonLoading = submitButton.querySelector(".button-loading");
+  const loadingText = submitButton.querySelector(".loading-text");
+
+  if (loading) {
+    buttonText.classList.add("hidden");
+    buttonLoading.classList.remove("hidden");
+    loadingText.textContent = t.analyzing;
+    submitButton.disabled = true;
+  } else {
+    buttonText.classList.remove("hidden");
+    buttonLoading.classList.add("hidden");
+    submitButton.disabled = false;
+  }
 }
 
 // Mostrar los resultados
 function displayResults(data) {
-  console.log("data here: ", data);
   const parsedData = JSON.parse(data);
   currentEmotion.textContent = parsedData.emotion;
   transmutedEmotion.textContent = parsedData.oppositeEmotion;
   emotionIntensity.textContent = `${parsedData.intensity}/10`;
   updateMoodBar(parsedData.intensity);
 
+  // Display new fields if available
+  if (parsedData.polarityAxis) {
+    polarityBadge.textContent = parsedData.polarityAxis;
+    polarityBadge.classList.remove("hidden");
+  }
+
+  if (parsedData.emotionCategory) {
+    emotionCategoryTag.textContent = parsedData.emotionCategory;
+  }
+
+  if (parsedData.intensityLevel) {
+    intensityLevelTag.textContent = parsedData.intensityLevel;
+    intensityLevelTag.className = "intensity-level-tag " + parsedData.intensityLevel;
+  }
+
+  // Intensity bar
+  const pct = (parsedData.intensity / 10) * 100;
+  const barColor = parsedData.intensity <= 3
+    ? "var(--negative-color)"
+    : parsedData.intensity <= 6
+    ? "#eab308"
+    : "var(--positive-color)";
+  intensityBar.style.width = `${pct}%`;
+  intensityBar.style.backgroundColor = barColor;
+
   suggestionsList.innerHTML = "";
-  console.log(parsedData.suggestions);
   parsedData.suggestions.forEach((suggestion) => {
     const li = document.createElement("li");
     li.textContent = suggestion;
@@ -254,24 +370,33 @@ function displayResults(data) {
   });
 
   resultsSection.classList.remove("hidden");
+  resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
   saveToLocalStorage(emotionDescription.value, data);
 }
 
 // Manejar errores
-function handleError(error) {
-  alert(`Error: ${error.message}`);
+function showError(message) {
+  errorMessage.textContent = message;
+  errorBanner.classList.remove("hidden");
 }
+
+closeError.addEventListener("click", () => {
+  errorBanner.classList.add("hidden");
+});
 
 // Enviar la descripción emocional
 submitButton.addEventListener("click", async () => {
   const description = emotionDescription.value.trim();
+  const t = getCurrentTranslation();
+
   if (!description) {
-    alert(getCurrentTranslation().errorEmptyDescription);
+    showError(t.errorEmptyDescription);
     return;
   }
 
   clearResults();
-  submitButton.disabled = true;
+  setButtonLoading(true);
+  showLoading();
 
   try {
     const response = await fetch(API_URL, {
@@ -286,17 +411,26 @@ submitButton.addEventListener("click", async () => {
       }),
     });
 
+    if (response.status === 404) {
+      throw new Error(t.errorInvalidKey);
+    }
+
     if (!response.ok) {
-      throw new Error(getCurrentTranslation().errorServer);
+      throw new Error(t.errorServer);
     }
 
     const data = await response.json();
-    console.log(data);
+    hideLoading();
     displayResults(data);
   } catch (error) {
-    handleError(error);
+    hideLoading();
+    if (error.name === "TypeError" && error.message === "Failed to fetch") {
+      showError(t.errorNetwork);
+    } else {
+      showError(error.message);
+    }
   } finally {
-    submitButton.disabled = false;
+    setButtonLoading(false);
   }
 });
 

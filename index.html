@@ -39,24 +39,68 @@
           placeholder="Describe cómo te sientes en este momento..."
           rows="4"
         ></textarea>
-        <button id="submit-emotion">Transmutar Emoción</button>
+        <button id="submit-emotion">
+          <span class="button-text">Transmutar Emoción</span>
+          <span class="button-loading hidden">
+            <span class="spinner"></span>
+            <span class="loading-text">Analizando...</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="error-banner hidden" id="error-banner">
+        <span id="error-message"></span>
+        <button id="close-error" class="close-error">&times;</button>
+      </div>
+
+      <div class="loading-section hidden" id="loading-section">
+        <div class="loading-steps">
+          <div class="loading-step active" id="step-1">
+            <span class="step-icon">
+              <span class="spinner-small"></span>
+            </span>
+            <span class="step-text" data-i18n="loadingIdentifying">Identificando emoción...</span>
+          </div>
+          <div class="loading-step" id="step-2">
+            <span class="step-icon">
+              <span class="step-dot"></span>
+            </span>
+            <span class="step-text" data-i18n="loadingAnalyzing">Analizando polaridad...</span>
+          </div>
+          <div class="loading-step" id="step-3">
+            <span class="step-icon">
+              <span class="step-dot"></span>
+            </span>
+            <span class="step-text" data-i18n="loadingTransmuting">Generando transmutación...</span>
+          </div>
+        </div>
       </div>
 
       <div class="results-section hidden" id="results">
+        <div class="polarity-badge" id="polarity-badge"></div>
         <div class="emotion-results">
-          <div class="emotion-card">
+          <div class="emotion-card negative-card">
+            <span class="emotion-category-tag" id="emotion-category-tag"></span>
             <h3>Emoción Identificada</h3>
             <p id="current-emotion"></p>
+            <span class="intensity-level-tag" id="intensity-level-tag"></span>
           </div>
-          <div class="emotion-arrow">→</div>
-          <div class="emotion-card">
+          <div class="emotion-arrow">
+            <span class="arrow-icon">&#10132;</span>
+          </div>
+          <div class="emotion-card positive-card">
             <h3>Emoción Transmutada</h3>
             <p id="transmuted-emotion"></p>
           </div>
         </div>
         <div class="intensity-section">
           <h3>Intensidad Emocional</h3>
-          <p id="emotion-intensity"></p>
+          <div class="intensity-display">
+            <span class="intensity-number" id="emotion-intensity"></span>
+            <div class="intensity-bar-container">
+              <div class="intensity-bar" id="intensity-bar"></div>
+            </div>
+          </div>
         </div>
         <div class="suggestions-section">
           <h3>Sugerencias para la Transmutación</h3>
