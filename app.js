@@ -7,66 +7,162 @@ const DEFAULT_LANG = "en";
 const emotionLibrary = {
   axes: {
     es: [
-      { neg: "Tristeza", pos: "Alegría", degrees: ["Duelo", "Tristeza", "Melancolía", "Serenidad", "Alegría", "Éxtasis"] },
-      { neg: "Asco", pos: "Confianza", degrees: ["Repugnancia", "Asco", "Aburrimiento", "Aceptación", "Confianza", "Admiración"] },
-      { neg: "Miedo", pos: "Ira", degrees: ["Terror", "Miedo", "Aprensión", "Molestia", "Ira", "Furia"] },
-      { neg: "Sorpresa", pos: "Anticipación", degrees: ["Asombro", "Sorpresa", "Distracción", "Interés", "Anticipación", "Vigilancia"] },
+      {
+        neg: "Tristeza", pos: "Alegría",
+        descNeg: "Respuesta a la pérdida o decepción. Nos conecta con lo que valoramos.",
+        descPos: "Sensación de bienestar y satisfacción. Nos motiva a repetir experiencias positivas.",
+        degrees: [
+          { name: "Duelo", desc: "Dolor intenso por una pérdida profunda" },
+          { name: "Tristeza", desc: "Pena moderada por algo que nos afecta" },
+          { name: "Melancolía", desc: "Nostalgia suave o reflexión pensativa" },
+          { name: "Serenidad", desc: "Calma apacible y satisfacción suave" },
+          { name: "Alegría", desc: "Felicidad activa y entusiasmo" },
+          { name: "Éxtasis", desc: "Felicidad desbordante e intensa" },
+        ],
+      },
+      {
+        neg: "Asco", pos: "Confianza",
+        descNeg: "Rechazo hacia algo dañino o tóxico. Nos protege de lo perjudicial.",
+        descPos: "Apertura y seguridad hacia otros. Nos permite crear vínculos.",
+        degrees: [
+          { name: "Repugnancia", desc: "Rechazo extremo y visceral" },
+          { name: "Asco", desc: "Aversión marcada hacia algo" },
+          { name: "Aburrimiento", desc: "Desinterés leve, falta de estímulo" },
+          { name: "Aceptación", desc: "Apertura básica sin resistencia" },
+          { name: "Confianza", desc: "Seguridad en otros o en uno mismo" },
+          { name: "Admiración", desc: "Respeto profundo y valoración intensa" },
+        ],
+      },
+      {
+        neg: "Miedo", pos: "Ira",
+        descNeg: "Alerta ante el peligro. Nos prepara para protegernos.",
+        descPos: "Respuesta ante la injusticia o la frustración. Nos impulsa a actuar.",
+        degrees: [
+          { name: "Terror", desc: "Miedo paralizante e incontrolable" },
+          { name: "Miedo", desc: "Sensación de amenaza que activa la alerta" },
+          { name: "Aprensión", desc: "Inquietud leve, nerviosismo anticipatorio" },
+          { name: "Molestia", desc: "Irritación leve o incomodidad" },
+          { name: "Ira", desc: "Enojo activo que busca cambio" },
+          { name: "Furia", desc: "Rabia intensa y explosiva" },
+        ],
+      },
+      {
+        neg: "Sorpresa", pos: "Anticipación",
+        descNeg: "Reacción ante lo inesperado. Nos reorienta hacia lo nuevo.",
+        descPos: "Preparación para lo que viene. Nos mantiene enfocados en el futuro.",
+        degrees: [
+          { name: "Asombro", desc: "Impacto total ante algo inesperado" },
+          { name: "Sorpresa", desc: "Reacción moderada ante lo imprevisto" },
+          { name: "Distracción", desc: "Pérdida leve de enfoque" },
+          { name: "Interés", desc: "Curiosidad activa y atención dirigida" },
+          { name: "Anticipación", desc: "Expectativa consciente del futuro" },
+          { name: "Vigilancia", desc: "Atención máxima y estado de alerta" },
+        ],
+      },
     ],
     en: [
-      { neg: "Sadness", pos: "Joy", degrees: ["Grief", "Sadness", "Pensiveness", "Serenity", "Joy", "Ecstasy"] },
-      { neg: "Disgust", pos: "Trust", degrees: ["Loathing", "Disgust", "Boredom", "Acceptance", "Trust", "Admiration"] },
-      { neg: "Fear", pos: "Anger", degrees: ["Terror", "Fear", "Apprehension", "Annoyance", "Anger", "Rage"] },
-      { neg: "Surprise", pos: "Anticipation", degrees: ["Amazement", "Surprise", "Distraction", "Interest", "Anticipation", "Vigilance"] },
+      {
+        neg: "Sadness", pos: "Joy",
+        descNeg: "Response to loss or disappointment. Connects us with what we value.",
+        descPos: "Feeling of well-being and satisfaction. Motivates us to repeat positive experiences.",
+        degrees: [
+          { name: "Grief", desc: "Intense pain from a deep loss" },
+          { name: "Sadness", desc: "Moderate sorrow about something affecting us" },
+          { name: "Pensiveness", desc: "Gentle nostalgia or reflective thought" },
+          { name: "Serenity", desc: "Peaceful calm and gentle satisfaction" },
+          { name: "Joy", desc: "Active happiness and enthusiasm" },
+          { name: "Ecstasy", desc: "Overwhelming and intense happiness" },
+        ],
+      },
+      {
+        neg: "Disgust", pos: "Trust",
+        descNeg: "Rejection of something harmful or toxic. Protects us from what is detrimental.",
+        descPos: "Openness and security toward others. Allows us to build bonds.",
+        degrees: [
+          { name: "Loathing", desc: "Extreme and visceral rejection" },
+          { name: "Disgust", desc: "Marked aversion toward something" },
+          { name: "Boredom", desc: "Mild disinterest, lack of stimulation" },
+          { name: "Acceptance", desc: "Basic openness without resistance" },
+          { name: "Trust", desc: "Security in others or in oneself" },
+          { name: "Admiration", desc: "Deep respect and intense appreciation" },
+        ],
+      },
+      {
+        neg: "Fear", pos: "Anger",
+        descNeg: "Alert to danger. Prepares us to protect ourselves.",
+        descPos: "Response to injustice or frustration. Drives us to take action.",
+        degrees: [
+          { name: "Terror", desc: "Paralyzing and uncontrollable fear" },
+          { name: "Fear", desc: "Sense of threat that activates alertness" },
+          { name: "Apprehension", desc: "Mild unease, anticipatory nervousness" },
+          { name: "Annoyance", desc: "Mild irritation or discomfort" },
+          { name: "Anger", desc: "Active anger that seeks change" },
+          { name: "Rage", desc: "Intense and explosive fury" },
+        ],
+      },
+      {
+        neg: "Surprise", pos: "Anticipation",
+        descNeg: "Reaction to the unexpected. Reorients us toward the new.",
+        descPos: "Preparation for what is coming. Keeps us focused on the future.",
+        degrees: [
+          { name: "Amazement", desc: "Total impact from something unexpected" },
+          { name: "Surprise", desc: "Moderate reaction to the unforeseen" },
+          { name: "Distraction", desc: "Mild loss of focus" },
+          { name: "Interest", desc: "Active curiosity and directed attention" },
+          { name: "Anticipation", desc: "Conscious expectation of the future" },
+          { name: "Vigilance", desc: "Maximum attention and state of alert" },
+        ],
+      },
     ],
   },
   dyads: {
     es: [
-      { name: "Amor", formula: "Alegría + Confianza" },
-      { name: "Sumisión", formula: "Confianza + Miedo" },
-      { name: "Asombro", formula: "Miedo + Sorpresa" },
-      { name: "Desaprobación", formula: "Sorpresa + Tristeza" },
-      { name: "Remordimiento", formula: "Tristeza + Asco" },
-      { name: "Desprecio", formula: "Asco + Ira" },
-      { name: "Agresividad", formula: "Ira + Anticipación" },
-      { name: "Optimismo", formula: "Anticipación + Alegría" },
-      { name: "Culpa", formula: "Alegría + Miedo" },
-      { name: "Curiosidad", formula: "Confianza + Sorpresa" },
-      { name: "Desesperación", formula: "Miedo + Tristeza" },
-      { name: "Envidia", formula: "Tristeza + Ira" },
-      { name: "Cinismo", formula: "Asco + Anticipación" },
-      { name: "Orgullo", formula: "Ira + Alegría" },
-      { name: "Esperanza", formula: "Anticipación + Confianza" },
-      { name: "Ansiedad", formula: "Anticipación + Miedo" },
-      { name: "Vergüenza", formula: "Miedo + Asco" },
-      { name: "Deleite", formula: "Alegría + Sorpresa" },
-      { name: "Sentimentalismo", formula: "Confianza + Tristeza" },
-      { name: "Indignación", formula: "Sorpresa + Ira" },
-      { name: "Pesimismo", formula: "Tristeza + Anticipación" },
-      { name: "Dominancia", formula: "Ira + Confianza" },
+      { name: "Amor", formula: "Alegría + Confianza", desc: "Conexión profunda basada en la felicidad y la seguridad con el otro" },
+      { name: "Sumisión", formula: "Confianza + Miedo", desc: "Ceder ante alguien por respeto mezclado con temor" },
+      { name: "Asombro", formula: "Miedo + Sorpresa", desc: "Admiración temerosa ante algo que nos sobrepasa" },
+      { name: "Desaprobación", formula: "Sorpresa + Tristeza", desc: "Decepción ante algo inesperado y negativo" },
+      { name: "Remordimiento", formula: "Tristeza + Asco", desc: "Arrepentimiento profundo por algo que hicimos mal" },
+      { name: "Desprecio", formula: "Asco + Ira", desc: "Rechazo activo e intenso hacia alguien o algo" },
+      { name: "Agresividad", formula: "Ira + Anticipación", desc: "Impulso combativo dirigido hacia un objetivo" },
+      { name: "Optimismo", formula: "Anticipación + Alegría", desc: "Expectativa positiva sobre el futuro" },
+      { name: "Culpa", formula: "Alegría + Miedo", desc: "Felicidad teñida por el temor a las consecuencias" },
+      { name: "Curiosidad", formula: "Confianza + Sorpresa", desc: "Deseo de explorar lo desconocido con apertura" },
+      { name: "Desesperación", formula: "Miedo + Tristeza", desc: "Sensación de estar atrapado sin salida" },
+      { name: "Envidia", formula: "Tristeza + Ira", desc: "Dolor por lo que otros tienen y nosotros no" },
+      { name: "Cinismo", formula: "Asco + Anticipación", desc: "Desconfianza escéptica hacia las intenciones ajenas" },
+      { name: "Orgullo", formula: "Ira + Alegría", desc: "Satisfacción intensa por un logro o posición" },
+      { name: "Esperanza", formula: "Anticipación + Confianza", desc: "Fe en que algo positivo sucederá" },
+      { name: "Ansiedad", formula: "Anticipación + Miedo", desc: "Preocupación inquietante por lo que podría pasar" },
+      { name: "Vergüenza", formula: "Miedo + Asco", desc: "Rechazo hacia uno mismo por temor al juicio" },
+      { name: "Deleite", formula: "Alegría + Sorpresa", desc: "Placer inesperado que nos llena de gozo" },
+      { name: "Sentimentalismo", formula: "Confianza + Tristeza", desc: "Nostalgia tierna por vínculos y recuerdos" },
+      { name: "Indignación", formula: "Sorpresa + Ira", desc: "Enojo ante algo injusto e inesperado" },
+      { name: "Pesimismo", formula: "Tristeza + Anticipación", desc: "Expectativa negativa sobre lo que vendrá" },
+      { name: "Dominancia", formula: "Ira + Confianza", desc: "Control seguro y firme sobre una situación" },
     ],
     en: [
-      { name: "Love", formula: "Joy + Trust" },
-      { name: "Submission", formula: "Trust + Fear" },
-      { name: "Awe", formula: "Fear + Surprise" },
-      { name: "Disapproval", formula: "Surprise + Sadness" },
-      { name: "Remorse", formula: "Sadness + Disgust" },
-      { name: "Contempt", formula: "Disgust + Anger" },
-      { name: "Aggressiveness", formula: "Anger + Anticipation" },
-      { name: "Optimism", formula: "Anticipation + Joy" },
-      { name: "Guilt", formula: "Joy + Fear" },
-      { name: "Curiosity", formula: "Trust + Surprise" },
-      { name: "Despair", formula: "Fear + Sadness" },
-      { name: "Envy", formula: "Sadness + Anger" },
-      { name: "Cynicism", formula: "Disgust + Anticipation" },
-      { name: "Pride", formula: "Anger + Joy" },
-      { name: "Hope", formula: "Anticipation + Trust" },
-      { name: "Anxiety", formula: "Anticipation + Fear" },
-      { name: "Shame", formula: "Fear + Disgust" },
-      { name: "Delight", formula: "Joy + Surprise" },
-      { name: "Sentimentality", formula: "Trust + Sadness" },
-      { name: "Outrage", formula: "Surprise + Anger" },
-      { name: "Pessimism", formula: "Sadness + Anticipation" },
-      { name: "Dominance", formula: "Anger + Trust" },
+      { name: "Love", formula: "Joy + Trust", desc: "Deep connection based on happiness and security with another" },
+      { name: "Submission", formula: "Trust + Fear", desc: "Yielding to someone out of respect mixed with fear" },
+      { name: "Awe", formula: "Fear + Surprise", desc: "Fearful admiration before something that overwhelms us" },
+      { name: "Disapproval", formula: "Surprise + Sadness", desc: "Disappointment at something unexpected and negative" },
+      { name: "Remorse", formula: "Sadness + Disgust", desc: "Deep regret for something we did wrong" },
+      { name: "Contempt", formula: "Disgust + Anger", desc: "Active and intense rejection toward someone or something" },
+      { name: "Aggressiveness", formula: "Anger + Anticipation", desc: "Combative drive directed toward an objective" },
+      { name: "Optimism", formula: "Anticipation + Joy", desc: "Positive expectation about the future" },
+      { name: "Guilt", formula: "Joy + Fear", desc: "Happiness tainted by fear of consequences" },
+      { name: "Curiosity", formula: "Trust + Surprise", desc: "Desire to explore the unknown with openness" },
+      { name: "Despair", formula: "Fear + Sadness", desc: "Feeling of being trapped with no way out" },
+      { name: "Envy", formula: "Sadness + Anger", desc: "Pain over what others have and we do not" },
+      { name: "Cynicism", formula: "Disgust + Anticipation", desc: "Skeptical distrust toward others' intentions" },
+      { name: "Pride", formula: "Anger + Joy", desc: "Intense satisfaction from an achievement or position" },
+      { name: "Hope", formula: "Anticipation + Trust", desc: "Faith that something positive will happen" },
+      { name: "Anxiety", formula: "Anticipation + Fear", desc: "Unsettling worry about what could happen" },
+      { name: "Shame", formula: "Fear + Disgust", desc: "Self-rejection driven by fear of judgment" },
+      { name: "Delight", formula: "Joy + Surprise", desc: "Unexpected pleasure that fills us with joy" },
+      { name: "Sentimentality", formula: "Trust + Sadness", desc: "Tender nostalgia for bonds and memories" },
+      { name: "Outrage", formula: "Surprise + Anger", desc: "Anger at something unjust and unexpected" },
+      { name: "Pessimism", formula: "Sadness + Anticipation", desc: "Negative expectation about what is to come" },
+      { name: "Dominance", formula: "Anger + Trust", desc: "Confident and firm control over a situation" },
     ],
   },
 };
@@ -85,14 +181,18 @@ function renderLibrary() {
         <span class="axis-arrow">&#10231;</span>
         <span class="axis-positive">${axis.pos}</span>
       </div>
+      <div class="axis-descriptions">
+        <span class="axis-desc-neg">${axis.descNeg}</span>
+        <span class="axis-desc-pos">${axis.descPos}</span>
+      </div>
       <div class="axis-degrees">
-        <span class="degree intense-neg">${axis.degrees[0]}</span>
-        <span class="degree moderate-neg">${axis.degrees[1]}</span>
-        <span class="degree mild-neg">${axis.degrees[2]}</span>
-        <span class="degree neutral">&#8226;</span>
-        <span class="degree mild-pos">${axis.degrees[3]}</span>
-        <span class="degree moderate-pos">${axis.degrees[4]}</span>
-        <span class="degree intense-pos">${axis.degrees[5]}</span>
+        ${axis.degrees.map((d, i) => {
+          const classes = ["intense-neg", "moderate-neg", "mild-neg", "mild-pos", "moderate-pos", "intense-pos"];
+          return `<div class="degree ${classes[i]}" title="${d.desc}">
+            <span class="degree-name">${d.name}</span>
+            <span class="degree-desc">${d.desc}</span>
+          </div>`;
+        }).join('<div class="degree neutral">&#8226;</div>')}
       </div>
     </div>`
     )
@@ -104,6 +204,7 @@ function renderLibrary() {
     <div class="dyad-card">
       <span class="dyad-name">${d.name}</span>
       <span class="dyad-formula">${d.formula}</span>
+      <span class="dyad-desc">${d.desc}</span>
     </div>`
     )
     .join("")}</div>`;
