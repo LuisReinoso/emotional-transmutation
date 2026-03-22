@@ -247,8 +247,6 @@ function updateUILanguage() {
     t.identifiedEmotion;
   document.querySelector(".emotion-card:last-child h3").textContent =
     t.transmutedEmotion;
-  document.querySelector(".intensity-section h3").textContent =
-    t.emotionalIntensity;
   document.querySelector(".suggestions-section h3").textContent = t.suggestions;
   document.querySelector("#key-modal h2").textContent = t.configureKey;
   accessKeyInput.placeholder = t.keyPlaceholder;
