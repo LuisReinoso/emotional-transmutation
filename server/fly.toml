@@ -1,5 +1,5 @@
 app = "emotional-transmutation"
-primary_region = "mia"
+primary_region = "dfw"
 
 [build]
   dockerfile = "Dockerfile"

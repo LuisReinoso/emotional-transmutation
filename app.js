@@ -1,5 +1,5 @@
 // Configuración
-const API_URL = "https://news-summary.fly.dev/emotional-transmutation";
+const API_URL = "https://emotional-transmutation.fly.dev/emotional-transmutation";
 const DEFAULT_KEY = "1234567890";
 const DEFAULT_LANG = "en";
 
