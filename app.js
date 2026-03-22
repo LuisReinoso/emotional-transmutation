@@ -41,6 +41,17 @@ const translations = {
     loadingAnalyzing: "Analizando polaridad...",
     loadingTransmuting: "Generando transmutación...",
     analyzing: "Analizando...",
+    emotionsLibrary: "Biblioteca",
+    libraryTitle: "Biblioteca de Emociones",
+    librarySubtitle: "Basada en la Rueda de Emociones de Plutchik",
+    tabPrimary: "Primarias",
+    tabDyads: "Compuestas",
+    spectrumTitle: "Tu posición en el espectro",
+    spectrumDeepNeg: "Estás en el polo profundo negativo. El camino es largo pero cada paso cuenta. Enfócate en pequeñas acciones.",
+    spectrumNeg: "Estás en territorio negativo. Las sugerencias te ayudarán a elevar tu vibración gradualmente.",
+    spectrumMid: "Estás en una zona neutral. Un pequeño impulso puede llevarte hacia el polo positivo.",
+    spectrumPos: "Ya estás acercándote al polo positivo. Mantén las prácticas que te trajeron aquí.",
+    spectrumHighPos: "Tu vibración está alta. Estás en el camino correcto de la transmutación.",
   },
   en: {
     title: "Emotional Transmutation",
@@ -78,6 +89,17 @@ const translations = {
     loadingAnalyzing: "Analyzing polarity...",
     loadingTransmuting: "Generating transmutation...",
     analyzing: "Analyzing...",
+    emotionsLibrary: "Library",
+    libraryTitle: "Emotions Library",
+    librarySubtitle: "Based on Plutchik's Wheel of Emotions",
+    tabPrimary: "Primary",
+    tabDyads: "Compound",
+    spectrumTitle: "Your position on the spectrum",
+    spectrumDeepNeg: "You are in the deep negative pole. The path is long but every step counts. Focus on small actions.",
+    spectrumNeg: "You are in negative territory. The suggestions will help you raise your vibration gradually.",
+    spectrumMid: "You are in a neutral zone. A small push can take you toward the positive pole.",
+    spectrumPos: "You are approaching the positive pole. Keep the practices that brought you here.",
+    spectrumHighPos: "Your vibration is high. You are on the right path of transmutation.",
   },
 };
 
@@ -100,7 +122,6 @@ const submitButton = document.getElementById("submit-emotion");
 const resultsSection = document.getElementById("results");
 const currentEmotion = document.getElementById("current-emotion");
 const transmutedEmotion = document.getElementById("transmuted-emotion");
-const emotionIntensity = document.getElementById("emotion-intensity");
 const suggestionsList = document.getElementById("suggestions-list");
 const moodLevel = document.getElementById("mood-level");
 const historyOption = document.getElementById("history-option");
@@ -108,6 +129,13 @@ const historyModal = document.getElementById("history-modal");
 const historyList = document.getElementById("history-list");
 const clearHistoryButton = document.getElementById("clear-history");
 const closeHistoryModal = document.getElementById("close-history-modal");
+const emotionsLibraryOption = document.getElementById("emotions-library-option");
+const emotionsLibraryModal = document.getElementById("emotions-library-modal");
+const closeLibraryModal = document.getElementById("close-library-modal");
+const spectrumMarker = document.getElementById("spectrum-marker");
+const spectrumLabelLeft = document.getElementById("spectrum-label-left");
+const spectrumLabelRight = document.getElementById("spectrum-label-right");
+const spectrumMessage = document.getElementById("spectrum-message");
 const errorBanner = document.getElementById("error-banner");
 const errorMessage = document.getElementById("error-message");
 const closeError = document.getElementById("close-error");
@@ -115,7 +143,6 @@ const loadingSection = document.getElementById("loading-section");
 const polarityBadge = document.getElementById("polarity-badge");
 const emotionCategoryTag = document.getElementById("emotion-category-tag");
 const intensityLevelTag = document.getElementById("intensity-level-tag");
-const intensityBar = document.getElementById("intensity-bar");
 
 // Inicializar configuraciones
 if (!localStorage.getItem("accessKey")) {
@@ -233,6 +260,12 @@ function updateUILanguage() {
     document.querySelectorAll(".modal-buttons button:last-child")
   ).forEach((btn) => (btn.textContent = t.cancel));
   historyOption.textContent = t.historyOption;
+  emotionsLibraryOption.textContent = t.emotionsLibrary;
+  document.getElementById("library-title").textContent = t.libraryTitle;
+  document.getElementById("library-subtitle").textContent = t.librarySubtitle;
+  document.getElementById("tab-primary").textContent = t.tabPrimary;
+  document.getElementById("tab-dyads").textContent = t.tabDyads;
+  document.querySelector(".polarity-spectrum-section h3").textContent = t.spectrumTitle;
   document.querySelector("#history-modal h2").textContent = t.historyTitle;
   clearHistoryButton.textContent = t.clearHistory;
   closeHistoryModal.textContent = t.close;
@@ -251,8 +284,8 @@ function updateMoodBar(intensity) {
 function clearResults() {
   currentEmotion.textContent = "";
   transmutedEmotion.textContent = "";
-  emotionIntensity.textContent = "";
   suggestionsList.innerHTML = "";
+  spectrumMessage.textContent = "";
   resultsSection.classList.add("hidden");
   errorBanner.classList.add("hidden");
 }
@@ -334,7 +367,6 @@ function displayResults(data) {
   const parsedData = JSON.parse(data);
   currentEmotion.textContent = parsedData.emotion;
   transmutedEmotion.textContent = parsedData.oppositeEmotion;
-  emotionIntensity.textContent = `${parsedData.intensity}/10`;
   updateMoodBar(parsedData.intensity);
 
   // Display new fields if available
@@ -352,15 +384,33 @@ function displayResults(data) {
     intensityLevelTag.className = "intensity-level-tag " + parsedData.intensityLevel;
   }
 
-  // Intensity bar
+  // Polarity spectrum
+  const t = getCurrentTranslation();
   const pct = (parsedData.intensity / 10) * 100;
-  const barColor = parsedData.intensity <= 3
-    ? "var(--negative-color)"
-    : parsedData.intensity <= 6
-    ? "#eab308"
-    : "var(--positive-color)";
-  intensityBar.style.width = `${pct}%`;
-  intensityBar.style.backgroundColor = barColor;
+  spectrumMarker.style.left = `${pct}%`;
+
+  // Split polarityAxis into left/right labels
+  if (parsedData.polarityAxis) {
+    const parts = parsedData.polarityAxis.split("↔").map((s) => s.trim());
+    spectrumLabelLeft.textContent = parts[0] || parsedData.emotion;
+    spectrumLabelRight.textContent = parts[1] || parsedData.oppositeEmotion;
+  } else {
+    spectrumLabelLeft.textContent = parsedData.emotion;
+    spectrumLabelRight.textContent = parsedData.oppositeEmotion;
+  }
+
+  // Contextual message based on position
+  if (parsedData.intensity <= 2) {
+    spectrumMessage.textContent = t.spectrumDeepNeg;
+  } else if (parsedData.intensity <= 4) {
+    spectrumMessage.textContent = t.spectrumNeg;
+  } else if (parsedData.intensity <= 6) {
+    spectrumMessage.textContent = t.spectrumMid;
+  } else if (parsedData.intensity <= 8) {
+    spectrumMessage.textContent = t.spectrumPos;
+  } else {
+    spectrumMessage.textContent = t.spectrumHighPos;
+  }
 
   suggestionsList.innerHTML = "";
   parsedData.suggestions.forEach((suggestion) => {
@@ -457,6 +507,32 @@ historyOption.addEventListener("click", () => {
 
 closeHistoryModal.addEventListener("click", () => {
   historyModal.classList.add("hidden");
+});
+
+// Emotions library modal
+emotionsLibraryOption.addEventListener("click", () => {
+  emotionsLibraryModal.classList.remove("hidden");
+  settingsMenu.classList.add("hidden");
+});
+
+closeLibraryModal.addEventListener("click", () => {
+  emotionsLibraryModal.classList.add("hidden");
+});
+
+emotionsLibraryModal.addEventListener("click", (e) => {
+  if (e.target === emotionsLibraryModal) {
+    emotionsLibraryModal.classList.add("hidden");
+  }
+});
+
+// Library tab switching
+document.querySelectorAll(".library-tab").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".library-tab").forEach((t) => t.classList.remove("active"));
+    document.querySelectorAll(".library-panel").forEach((p) => p.classList.add("hidden"));
+    tab.classList.add("active");
+    document.getElementById(`panel-${tab.dataset.tab}`).classList.remove("hidden");
+  });
 });
 
 clearHistoryButton.addEventListener("click", () => {

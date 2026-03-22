@@ -19,6 +19,7 @@
             <button id="access-key-option">Clave de Acceso</button>
             <button id="language-option">Idioma</button>
             <button id="history-option">Historial</button>
+            <button id="emotions-library-option">Biblioteca</button>
           </div>
         </div>
       </div>
@@ -93,14 +94,18 @@
             <p id="transmuted-emotion"></p>
           </div>
         </div>
-        <div class="intensity-section">
-          <h3>Intensidad Emocional</h3>
-          <div class="intensity-display">
-            <span class="intensity-number" id="emotion-intensity"></span>
-            <div class="intensity-bar-container">
-              <div class="intensity-bar" id="intensity-bar"></div>
+        <div class="polarity-spectrum-section">
+          <h3>Tu posición en el espectro</h3>
+          <div class="polarity-spectrum">
+            <div class="spectrum-bar">
+              <div class="spectrum-marker" id="spectrum-marker"></div>
+            </div>
+            <div class="spectrum-labels">
+              <span class="spectrum-label-left" id="spectrum-label-left"></span>
+              <span class="spectrum-label-right" id="spectrum-label-right"></span>
             </div>
           </div>
+          <p class="spectrum-message" id="spectrum-message"></p>
         </div>
         <div class="suggestions-section">
           <h3>Sugerencias para la Transmutación</h3>
@@ -148,6 +153,186 @@
         <div class="modal-buttons">
           <button id="clear-history">Limpiar Historial</button>
           <button id="close-history-modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para la biblioteca de emociones -->
+    <div id="emotions-library-modal" class="modal hidden">
+      <div class="modal-content library-content">
+        <h2 id="library-title">Biblioteca de Emociones</h2>
+        <p class="library-subtitle" id="library-subtitle">Basada en la Rueda de Emociones de Plutchik</p>
+
+        <div class="library-tabs">
+          <button class="library-tab active" data-tab="primary" id="tab-primary">Primarias</button>
+          <button class="library-tab" data-tab="dyads" id="tab-dyads">Compuestas</button>
+        </div>
+
+        <div class="library-panel" id="panel-primary">
+          <div class="emotion-axis" data-axis="joy-sadness">
+            <div class="axis-header">
+              <span class="axis-negative">Tristeza</span>
+              <span class="axis-arrow">&#10231;</span>
+              <span class="axis-positive">Alegría</span>
+            </div>
+            <div class="axis-degrees">
+              <span class="degree intense-neg">Grief</span>
+              <span class="degree moderate-neg">Sadness</span>
+              <span class="degree mild-neg">Pensiveness</span>
+              <span class="degree neutral">&#8226;</span>
+              <span class="degree mild-pos">Serenity</span>
+              <span class="degree moderate-pos">Joy</span>
+              <span class="degree intense-pos">Ecstasy</span>
+            </div>
+          </div>
+
+          <div class="emotion-axis" data-axis="trust-disgust">
+            <div class="axis-header">
+              <span class="axis-negative">Asco</span>
+              <span class="axis-arrow">&#10231;</span>
+              <span class="axis-positive">Confianza</span>
+            </div>
+            <div class="axis-degrees">
+              <span class="degree intense-neg">Loathing</span>
+              <span class="degree moderate-neg">Disgust</span>
+              <span class="degree mild-neg">Boredom</span>
+              <span class="degree neutral">&#8226;</span>
+              <span class="degree mild-pos">Acceptance</span>
+              <span class="degree moderate-pos">Trust</span>
+              <span class="degree intense-pos">Admiration</span>
+            </div>
+          </div>
+
+          <div class="emotion-axis" data-axis="fear-anger">
+            <div class="axis-header">
+              <span class="axis-negative">Miedo</span>
+              <span class="axis-arrow">&#10231;</span>
+              <span class="axis-positive">Ira</span>
+            </div>
+            <div class="axis-degrees">
+              <span class="degree intense-neg">Terror</span>
+              <span class="degree moderate-neg">Fear</span>
+              <span class="degree mild-neg">Apprehension</span>
+              <span class="degree neutral">&#8226;</span>
+              <span class="degree mild-pos">Annoyance</span>
+              <span class="degree moderate-pos">Anger</span>
+              <span class="degree intense-pos">Rage</span>
+            </div>
+          </div>
+
+          <div class="emotion-axis" data-axis="anticipation-surprise">
+            <div class="axis-header">
+              <span class="axis-negative">Sorpresa</span>
+              <span class="axis-arrow">&#10231;</span>
+              <span class="axis-positive">Anticipación</span>
+            </div>
+            <div class="axis-degrees">
+              <span class="degree intense-neg">Amazement</span>
+              <span class="degree moderate-neg">Surprise</span>
+              <span class="degree mild-neg">Distraction</span>
+              <span class="degree neutral">&#8226;</span>
+              <span class="degree mild-pos">Interest</span>
+              <span class="degree moderate-pos">Anticipation</span>
+              <span class="degree intense-pos">Vigilance</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="library-panel hidden" id="panel-dyads">
+          <div class="dyads-grid">
+            <div class="dyad-card">
+              <span class="dyad-name">Love</span>
+              <span class="dyad-formula">Joy + Trust</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Submission</span>
+              <span class="dyad-formula">Trust + Fear</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Awe</span>
+              <span class="dyad-formula">Fear + Surprise</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Disapproval</span>
+              <span class="dyad-formula">Surprise + Sadness</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Remorse</span>
+              <span class="dyad-formula">Sadness + Disgust</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Contempt</span>
+              <span class="dyad-formula">Disgust + Anger</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Aggressiveness</span>
+              <span class="dyad-formula">Anger + Anticipation</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Optimism</span>
+              <span class="dyad-formula">Anticipation + Joy</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Guilt</span>
+              <span class="dyad-formula">Joy + Fear</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Curiosity</span>
+              <span class="dyad-formula">Trust + Surprise</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Despair</span>
+              <span class="dyad-formula">Fear + Sadness</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Envy</span>
+              <span class="dyad-formula">Sadness + Anger</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Cynicism</span>
+              <span class="dyad-formula">Disgust + Anticipation</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Pride</span>
+              <span class="dyad-formula">Anger + Joy</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Hope</span>
+              <span class="dyad-formula">Anticipation + Trust</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Anxiety</span>
+              <span class="dyad-formula">Anticipation + Fear</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Shame</span>
+              <span class="dyad-formula">Fear + Disgust</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Delight</span>
+              <span class="dyad-formula">Joy + Surprise</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Sentimentality</span>
+              <span class="dyad-formula">Trust + Sadness</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Outrage</span>
+              <span class="dyad-formula">Surprise + Anger</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Pessimism</span>
+              <span class="dyad-formula">Sadness + Anticipation</span>
+            </div>
+            <div class="dyad-card">
+              <span class="dyad-name">Dominance</span>
+              <span class="dyad-formula">Anger + Trust</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-buttons">
+          <button id="close-library-modal">Cerrar</button>
         </div>
       </div>
     </div>
